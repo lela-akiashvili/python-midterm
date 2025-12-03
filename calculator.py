@@ -1,54 +1,66 @@
 def calculator():
-    
-    print("შეიყვანეთ ორი რიცხვი")
+
+    print("Enter two numbers")
+
     while True:
-        try:
-            raw1 = input("შეიყვანეთ პირველი რიცხვი: ").strip()
-            raw2 = input("შეიყვანეთ მეორე რიცხვი: ").strip()
 
-            # ანაცვლებს ,-ს . ით, რადგან სწორად აღიქვას რიცხვი
-            
-            raw1 = raw1.replace(",", ".")
-            raw2 = raw2.replace(",", ".")
-
-            num1 = eval(raw1)
-            num2 = eval(raw2)
-
-            operation = input("აირჩიეთ ოპერაცია (+, -, *, /): ").strip()
-
-            if operation == "+":
-                result = num1 + num2
-            elif operation == "-":
-                result = num1 - num2
-            elif operation == "*":
-                result = num1 * num2
-            elif operation == "/":
-                if num2 == 0:
-                    print("ნულზე გაყოფა არ შეიძლება!")
-                    continue
-                result = num1 / num2
-            else:
-                print("არასწორი ოპერაცია — გამოიყენეთ მხოლოდ +, -, * ან /.")
-                continue
-
-            print(f"შედეგი: {result}")
-
-            again = input("გაგრძელება? (y/n): ").strip().lower()
-            if again != "y":
-                print("კალკულატორი დასრულდა.")
+        # Get valid first number
+        while True:
+            raw1 = input("Enter the first number: ").strip().replace(",", ".")
+            try:
+                num1 = float(raw1)
                 break
-            
+            except ValueError:
+                print("Invalid number — please enter a valid numeric value.")
 
-        except ValueError:
+        # Get valid second number
+        while True:
+            raw2 = input("Enter the second number: ").strip().replace(",", ".")
+            try:
+                num2 = float(raw2)
+                break
+            except ValueError:
+                print("Invalid number — please enter a valid numeric value.")
 
-            print("რიცხვი არასწორია — დარწმუნდით, რომ შეიყვანეთ სწორი ციფრები")
+        # Get valid operation
+        while True:
+            operation = input("Choose operation (+, -, *, /): ").strip()
+            if operation in ["+", "-", "*", "/"]:
+                if operation == "/" and num2 == 0:
+                    print("Division by zero is not allowed. Enter a different second number.")
+                    # re-ask second number if dividing by zero
+                    while True:
+                        raw2 = input("Enter the second number: ").strip().replace(",", ".")
+                        try:
+                            num2 = float(raw2)
+                            if num2 == 0:
+                                print("Still zero — cannot divide by zero.")
+                                continue
+                            break
+                        except ValueError:
+                            print("Invalid number — please enter a valid numeric value.")
+                break
+            else:
+                print("Invalid operation — use only +, -, * or /.")
 
+        # Perform calculation
+        if operation == "+":
+            result = num1 + num2
+        elif operation == "-":
+            result = num1 - num2
+        elif operation == "*":
+            result = num1 * num2
+        elif operation == "/":
+            result = num1 / num2
+
+        print(f"Result: {result}")
+
+        # Continue?
+        again = input("Continue? (y/n): ").strip().lower()
+        if again != "y":
+            print("Calculator finished.")
             break
 
-
-if __name__ == "__main__":
-
-    calculator()
 
 if __name__ == "__main__":
     calculator()

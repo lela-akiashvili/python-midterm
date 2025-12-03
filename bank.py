@@ -1,41 +1,40 @@
 import os
 
-BALANCE_FILE = "balance.txt" #ბალანსის ფაილი
-PINCODE_FILE = "pincode.txt"          # პინ კოდის ფაილი
+BALANCE_FILE = "balance.txt"  # Balance file
+PINCODE_FILE = "pincode.txt"  # PIN code file
 
 
-# პინის ჩატვირთვა ან შექმნა
-
+# Load or create PIN
 def load_pin():
     if not os.path.exists(PINCODE_FILE):
         with open(PINCODE_FILE, "w") as file:
-            file.write("10244")  # Default PIN 1234
-        return "1024"
+            file.write("10244")  # Default PIN
+        return "10244"
     
     with open(PINCODE_FILE, "r") as file:
         return file.read().strip()
 
-# პინის შემოწმება
 
+# PIN verification
 def check_pin():
     correct_pin = load_pin()
     attempts = 3
 
     while attempts > 0:
-        pin = input("შეიყვანეთ თქვენი PIN კოდი: ")
+        pin = input("Enter your PIN code: ")
         
         if pin == correct_pin:
-            print(" PIN სწორია.\n")
-
+            print("PIN is correct.\n")
             return True
         else:
             attempts -= 1
-            print(f" არასწორი PIN! დარჩენილი მცდელობები: {attempts}")
+            print(f"Incorrect PIN! Remaining attempts: {attempts}")
 
-    print("3 მცდარ მცდელობაში ბანკომატი დაიბლოკება.")
-
+    print("ATM is locked after 3 incorrect attempts.")
     return False
 
+
+# Load balance from file
 def load_balance():
     if not os.path.exists(BALANCE_FILE):
         with open(BALANCE_FILE, "w") as file:
@@ -44,34 +43,44 @@ def load_balance():
     with open(BALANCE_FILE, "r") as file:
         return float(file.read())
 
+
+# Save balance to file
 def save_balance(balance):
     with open(BALANCE_FILE, "w") as file:
         file.write(str(balance))
 
-def check_balance(balance):
-    print(f"თქვენი ბალანსია: {balance} ლარი")
 
+# Check balance
+def check_balance(balance):
+    print(f"Your balance is: {balance} GEL")
+
+
+# Deposit money
 def deposit(balance):
-    amount = float(input("შეიყვანეთ შესატანი თანხა: "))
+    amount = float(input("Enter the amount to deposit: "))
     if amount <= 0:
-        print(" თანხა უნდა იყოს 0-ზე მეტი!")
+        print("Amount must be greater than 0!")
         return balance
     balance += amount
-    print(f" ოპერატია შესრულდა წარმატებით. ანგარიშზე დამატებულია {amount} ლარი")
+    print(f"Operation successful. {amount} GEL has been added to your account.")
     return balance
 
+
+# Withdraw money
 def withdraw(balance):
-    amount = float(input("შეიყვანეთ გასატანი თანხა: "))
+    amount = float(input("Enter the amount to withdraw: "))
     if amount <= 0:
-        print(" თანხა უნდა იყოს 0-ზე მეტი!")
+        print("Amount must be greater than 0!")
         return balance
     if amount > balance:
-        print(" ბალანსზე არ არის საკმარისი თანხა!")
+        print("Insufficient balance!")
         return balance
     balance -= amount
-    print(f" ოპერატია შესრულდა წარმატებით წარმატებით. ანგარიშიდან გატანილია {amount} ლარი")
+    print(f"Operation successful. {amount} GEL has been withdrawn from your account.")
     return balance
 
+
+# ATM main menu
 def atm():
     if not check_pin(): 
         return
@@ -79,13 +88,13 @@ def atm():
     balance = load_balance()
 
     while True:
-        print("\n--- ბანკომატი ---")
-        print("1. ბალანსის ნახვა")
-        print("2. თანხის შეტანა")
-        print("3. თანხის გატანა")
-        print("4. გამოსვლა")
+        print("\n--- ATM ---")
+        print("1. View Balance")
+        print("2. Deposit Money")
+        print("3. Withdraw Money")
+        print("4. Exit")
 
-        choice = input("აირჩიეთ ოპერაცია (1-4): ")
+        choice = input("Choose an operation (1-4): ")
 
         if choice == "1":
             check_balance(balance)
@@ -99,12 +108,11 @@ def atm():
             save_balance(balance)
 
         elif choice == "4":
-            print("გმადლობთ ბანკომატის გამოყენებისთვის!")
+            print("Thank you for using the ATM!")
             break
 
         else:
-            print(" არასწორი ტრანზაქცია! სცადეთ თავიდან.")
-
-atm()    
+            print("Invalid operation! Try again.")
 
 
+atm()
